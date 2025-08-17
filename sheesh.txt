@@ -1,0 +1,295 @@
+SAMPLES
+Bank Account System with Transaction Limits
+Objective:
+Simulate a simple banking system using a BankAccount class.
+Class: BankAccount
+Properties: AccountNumber, OwnerName, Balance
+• Methods:
+• Deposit (double amount)
+• Withdraw (double amount) - deny withdrawal if balance is insufficient.
+• CheckBalance ()
+Program Requirements:
+• Allow users to create multiple accounts.
+• Loop through a menu (switch statement) allowing:
+1. Deposit
+2. Withdraw
+3. View Balance
+4. Exit
+• Add a condition that users cannot withdraw more than 3 times in one session (use a counter )
+
+// PAUL WESLEY GOMEZ
+using System;
+using System.Collections.Generic;
+
+class BankAccount
+{
+    public int AccountNumber { get; set; }
+    public string OwnerName { get; set; }
+    public double Balance { get; private set; }
+    private int withdrawCount = 0;
+
+    public BankAccount(int accountNumber, string ownerName, double initialBalance)
+    {
+        AccountNumber = accountNumber;
+        OwnerName = ownerName;
+        Balance = initialBalance;
+    }
+
+    public void Deposit(double amount)
+    {
+        if (amount > 0)
+        {
+            Balance += amount;
+            Console.WriteLine($"Deposited {amount:C}. New Balance: {Balance:C}");
+        }
+        else
+        {
+            Console.WriteLine("Deposit amount must be positive.");
+        }
+    }
+
+    public void Withdraw(double amount)
+    {
+        if (withdrawCount >= 3)
+        {
+            Console.WriteLine("You have reached the withdrawal limit (3 times per session).");
+            return;
+        }
+
+        if (amount <= 0)
+        {
+            Console.WriteLine("Withdrawal amount must be positive.");
+            return;
+        }
+
+        if (Balance >= amount)
+        {
+            Balance -= amount;
+            withdrawCount++;
+            Console.WriteLine($"Withdrew {amount:C}. New Balance: {Balance:C}");
+        }
+        else
+        {
+            Console.WriteLine("Insufficient balance for this withdrawal.");
+        }
+    }
+
+    public void CheckBalance()
+    {
+        Console.WriteLine($"Account {AccountNumber} ({OwnerName}) Balance: {Balance:C}");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Dictionary<int, BankAccount> accounts = new Dictionary<int, BankAccount>();
+        int nextAccountNumber = 1001;
+
+        Console.WriteLine("Welcome to the Bank Account System!");
+
+        while (true)
+        {
+            Console.WriteLine("\nMain Menu:");
+            Console.WriteLine("1. Create Account");
+            Console.WriteLine("2. Deposit");
+            Console.WriteLine("3. Withdraw");
+            Console.WriteLine("4. View Balance");
+            Console.WriteLine("5. Exit");
+            Console.Write("Choose an option: ");
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Enter Owner Name: ");
+                    string owner = Console.ReadLine();
+                    Console.Write("Enter Initial Deposit: ");
+                    double initialDeposit = Convert.ToDouble(Console.ReadLine());
+
+                    BankAccount newAccount = new BankAccount(nextAccountNumber, owner, initialDeposit);
+                    accounts[nextAccountNumber] = newAccount;
+
+                    Console.WriteLine($"Account created successfully! Account Number: {nextAccountNumber}");
+                    nextAccountNumber++;
+                    break;
+
+                case "2":
+                    Console.Write("Enter Account Number: ");
+                    int depAccNum = Convert.ToInt32(Console.ReadLine());
+                    if (accounts.ContainsKey(depAccNum))
+                    {
+                        Console.Write("Enter Amount to Deposit: ");
+                        double depAmount = Convert.ToDouble(Console.ReadLine());
+                        accounts[depAccNum].Deposit(depAmount);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Account not found.");
+                    }
+                    break;
+
+                case "3":
+                    Console.Write("Enter Account Number: ");
+                    int withAccNum = Convert.ToInt32(Console.ReadLine());
+                    if (accounts.ContainsKey(withAccNum))
+                    {
+                        Console.Write("Enter Amount to Withdraw: ");
+                        double withAmount = Convert.ToDouble(Console.ReadLine());
+                        accounts[withAccNum].Withdraw(withAmount);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Account not found.");
+                    }
+                    break;
+
+                case "4":
+                    Console.Write("Enter Account Number: ");
+                    int balAccNum = Convert.ToInt32(Console.ReadLine());
+                    if (accounts.ContainsKey(balAccNum))
+                    {
+                        accounts[balAccNum].CheckBalance();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Account not found.");
+                    }
+                    break;
+
+                case "5":
+                    Console.WriteLine("Thank you for using the Bank Account System. Goodbye!");
+                    return;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    }
+}
+
+
+
+Problem Statement : Write a program that performs addition, subtraction, multiplication, or division based on user choice using switch
+
+Source Code: 
+using System;
+
+class Calculator // POL WESLEY
+{
+    static void Main()
+    {
+        double num1, num2, result;
+        char choice;
+
+        Console.WriteLine("Simple Calculator using switch statement");
+        Console.WriteLine("----------------------------------------");
+
+        // Input first number
+        Console.Write("Enter first number: ");
+        num1 = Convert.ToDouble(Console.ReadLine());
+
+        // Input second number
+        Console.Write("Enter second number: ");
+        num2 = Convert.ToDouble(Console.ReadLine());
+
+        // Display operation choices
+        Console.WriteLine("Choose an operation:");
+        Console.WriteLine(" + : Addition");
+        Console.WriteLine(" - : Subtraction");
+        Console.WriteLine(" * : Multiplication");
+        Console.WriteLine(" / : Division");
+        Console.Write("Enter your choice: ");
+        choice = Convert.ToChar(Console.ReadLine());
+
+        // Perform operation using switch
+        switch (choice)
+        {
+            case '+':
+                result = num1 + num2;
+                Console.WriteLine($"Result: {num1} + {num2} = {result}");
+                break;
+
+            case '-':
+                result = num1 - num2;
+                Console.WriteLine($"Result: {num1} - {num2} = {result}");
+                break;
+
+            case '*':
+                result = num1 * num2;
+                Console.WriteLine($"Result: {num1} * {num2} = {result}");
+                break;
+
+            case '/':
+                if (num2 != 0)
+                {
+                    result = num1 / num2;
+                    Console.WriteLine($"Result: {num1} / {num2} = {result}");
+                }
+                else
+                {
+                    Console.WriteLine("Error: Division by zero is not allowed.");
+                }
+                break;
+
+            default:
+                Console.WriteLine("Invalid operation choice.");
+                break;
+        }
+
+        Console.WriteLine("Press any key to exit.");
+        Console.ReadKey();
+    }
+}
+
+
+Problem Statement: Write a program that checks if a number is positive and even using nested if statements.
+
+Source Code :
+using System
+class Program5 // Powechi
+{
+    static void Main()
+    {
+        Console.Write("Enter a number: ");
+        int num = int.Parse(Console.ReadLine());
+        if (num > 0)
+        {
+            if (num % 2 == 0)
+            {
+                Console.WriteLine("The number is positive and even.");
+            }
+            else
+            {
+                Console.WriteLine("The number is positive but odd.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("The number is not positive.");
+        }
+    }
+}
+
+
+Problem Statement : Write a program that checks if a number is positive using an if statement.
+
+Source Code : 
+using System;
+
+class Program1  // PAUL WESLEY GOMEZ
+{
+    static void Main()
+    {
+        Console.Write("Enter a number: ");
+        int num = int.Parse(Console.ReadLine());
+        if (num > 0)
+        {
+            Console.WriteLine("The number is positive.");
+        }
+        Console.ReadKey();
+    }
+}
+
